@@ -14,4 +14,5 @@ public interface UserRepository extends JpaRepository<User, Integer> {
             "conti.listaCarte",
             "conti.listaCarte.listaMovimenti"})
     Optional<User> findById(int id);
+
 }

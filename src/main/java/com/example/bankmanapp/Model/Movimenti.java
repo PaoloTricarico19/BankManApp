@@ -1,6 +1,9 @@
 package com.example.bankmanapp.Model;
 
 import jakarta.persistence.*;
+import org.antlr.v4.runtime.misc.NotNull;
+
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -25,8 +28,10 @@ public class Movimenti {
     @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal importo;
 
+    @NotNull
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String tipo;
+    private TipoCarta tipo;
 
     @Column(nullable = false)
     private LocalDateTime data = LocalDateTime.now();
@@ -40,8 +45,8 @@ public class Movimenti {
     public void setCarta(Carta carta) { this.carta = carta; }
     public BigDecimal getImporto() { return importo; }
     public void setImporto(BigDecimal importo) { this.importo = importo; }
-    public String getTipo() { return tipo; }
-    public void setTipo(String tipo) { this.tipo = tipo; }
+    public TipoCarta getTipo() { return tipo; }
+    public void setTipo(TipoCarta tipo) { this.tipo = tipo; }
     public LocalDateTime getData() { return data; }
     public void setData(LocalDateTime data) { this.data = data; }
 }

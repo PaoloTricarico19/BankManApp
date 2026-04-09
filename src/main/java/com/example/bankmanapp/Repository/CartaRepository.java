@@ -19,5 +19,6 @@ public interface CartaRepository extends JpaRepository<Carta, Integer> {
             "listaMovimenti"})
     Optional<Carta> findById(int id);
 
+
 }
 

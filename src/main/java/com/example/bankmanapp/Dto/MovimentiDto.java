@@ -1,5 +1,7 @@
 package com.example.bankmanapp.Dto;
 
+import com.example.bankmanapp.Model.TipoCarta;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -8,6 +10,6 @@ public record MovimentiDto(
         int idConto,
         int idCarta,
         BigDecimal importo,
-        String tipo,
+        TipoCarta tipo,
         LocalDateTime data
 ) {}

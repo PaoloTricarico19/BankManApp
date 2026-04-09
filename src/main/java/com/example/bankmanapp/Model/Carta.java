@@ -1,6 +1,8 @@
 package com.example.bankmanapp.Model;
 
 import jakarta.persistence.*;
+import org.antlr.v4.runtime.misc.NotNull;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +30,7 @@ public class Carta {
     @Column(nullable = false)
     private Integer pin;
 
+    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private TipoCarta tipo;

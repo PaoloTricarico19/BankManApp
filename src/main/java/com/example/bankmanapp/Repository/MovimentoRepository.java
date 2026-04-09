@@ -13,5 +13,6 @@ public interface MovimentoRepository extends JpaRepository<Movimenti, Integer> {
             "conto.idUtente",
             "carta"})
     Optional<Movimenti> findById(int id);
+
 }
 
