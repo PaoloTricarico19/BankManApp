@@ -26,7 +26,7 @@ public class MovimentiController {
     @PostMapping(value = "/Create")
     public ResponseEntity<MovimentiDto> create(@RequestBody Movimenti nuovoMovimento) {
 
-        // Logghiamo l'azione senza esporre importo o causale nel log INFO
+        //Logghiamo l'azione senza esporre importo o causale nel log INFO
         log.info("Richiesta creazione nuovo movimento");
 
         MovimentiDto creato = movimentiService.creaMovimento(nuovoMovimento);
@@ -48,21 +48,24 @@ public class MovimentiController {
         return lista;
     }
 
-
-    // Metodo per aggiornare un utente esistente
-    // Riceve l'ID dall'URL e i dati aggiornati tramite UserDto nel body
+    //Metodo per aggiornare un utente esistente
+    //Riceve l'ID dall'URL e i dati aggiornati tramite UserDto nel body
     @PutMapping(value = "/Update/{id}")
     public ResponseEntity<MovimentiDto> updateMovimenti(@PathVariable int id, @RequestBody MovimentiDto movimentiDto) {
         try {
             MovimentiDto aggiornato = movimentiService.aggiornaMovimenti(id, movimentiDto);
+            //log di successo (commit OK)
+            log.info("Movimento {} aggiornato correttamente", id);
             return ResponseEntity.ok(aggiornato);
         } catch (RuntimeException e) {
+            //log di warning (update fallito)
+            log.warn("Movimenti {} non aggiornato corretamente", id, e.getMessage());
             return ResponseEntity.notFound().build();
         }
     }
 
-    // Metodo per eliminare un utente tramite ID
-    // Restituisce 204 No Content se l'operazione va a buon fine
+    //Metodo per eliminare un utente tramite ID
+    //Restituisce 204 No Content se l'operazione va a buon fine
     @DeleteMapping(value = "/Delete/{id}")
     public ResponseEntity<Void> deleteMovimenti(@PathVariable int id) {
         try {

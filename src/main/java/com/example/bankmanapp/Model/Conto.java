@@ -1,6 +1,8 @@
 package com.example.bankmanapp.Model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,6 +21,7 @@ public class Conto {
     @JoinColumn(name = "id_utente", nullable = false, unique = true)
     private User idUtente;
 
+    @NotBlank(message = "Iban è obbligatorio")
     @Column(nullable = false, length = 27)
     private String iban;
 
@@ -39,7 +42,7 @@ public class Conto {
         this.saldo = BigDecimal.ZERO;
     }
 
-    // --- Getters / Setters ---
+    //Getters / Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
     public User getIdUtente() { return idUtente; }

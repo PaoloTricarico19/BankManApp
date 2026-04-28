@@ -18,8 +18,6 @@ import java.util.stream.Collectors;
 @Service
 public class MovimentiService {
 
-    //private static final Logger log = LoggerFactory.getLogger(MovimentiService.class);
-
     @Autowired
     private MovimentoRepository movimentoRepository;
 

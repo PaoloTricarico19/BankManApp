@@ -1,8 +1,7 @@
 package com.example.bankmanapp.Model;
 
 import jakarta.persistence.*;
-import org.antlr.v4.runtime.misc.NotNull;
-
+import jakarta.validation.constraints.NotNull;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -15,12 +14,12 @@ public class Movimenti {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    // FK verso il Conto (Obbligatoria)
+    //FK verso il Conto (Obbligatoria)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_conto", nullable = false)
     private Conto conto;
 
-    // FK verso la Carta (Opzionale: es. nulla per un bonifico)
+    //FK verso la Carta (Opzionale: es. nulla per un bonifico)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_carta", nullable = false)
     private Carta carta;
@@ -36,7 +35,7 @@ public class Movimenti {
     @Column(nullable = false)
     private LocalDateTime data = LocalDateTime.now();
 
-    // --- Getters / Setters ---
+    //Getters / Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
     public Conto getConto() { return conto; }

@@ -3,15 +3,15 @@ package com.example.bankmanapp.Dto;
 import java.util.List;
 
 public record UserDto(
-        int id,
+        Integer id,
         String nome,
         String cognome,
-        int cellulare,
+        Integer cellulare,
         String citta,
         String regione,
         String provincia,
         String nazione,
-        int cap,
+        Integer cap,
         String indirizzo,
         String codiceFiscale,
         String email,

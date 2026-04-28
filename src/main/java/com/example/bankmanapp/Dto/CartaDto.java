@@ -6,7 +6,7 @@ import java.util.List;
 
 public record CartaDto(
         int id,
-        String numeroCarta,
+        int numeroCarta,
         String titolare,
         LocalDate dataScadenza,
         Integer cvv,

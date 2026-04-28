@@ -3,6 +3,8 @@ package com.example.bankmanapp.Model;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name="users")
@@ -12,39 +14,50 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @NotBlank(message = "Nome è obbligatorio")
     @Column(nullable = false)
     private String nome;
 
+    @NotBlank(message = "Cognome è obbligatorio")
     @Column(nullable = false)
     private String cognome;
 
     @Column(nullable = false, unique = true, length = 10)
-    private int cellulare;
+    private Integer cellulare;
 
+    @NotBlank(message = "Città è obbligatoria")
     @Column(nullable = false)
     private String citta;
 
+    @NotBlank(message = "Regione è obbligatoria")
     @Column(nullable = false)
     private String regione;
 
+    @NotBlank(message = "Provincia è obbligatorio")
     @Column(nullable = false)
     private String provincia;
 
+    @NotBlank(message = "Nazione è obbligatorio")
     @Column(nullable = false)
     private String nazione;
 
     @Column(nullable = false, length = 5)
-    private int cap;
+    private Integer cap;
 
+    @NotBlank(message = "Indirizzo è obbligatorio")
     @Column(nullable = false)
     private String indirizzo;
 
+    @NotBlank(message = "Codice Fiscale è obbligatorio")
     @Column(nullable = false, unique = true, length = 16)
     private String codiceFiscale;
 
     @Column(nullable = false, unique = true)
+    @NotBlank(message = "L'email è obbligatoria")
+    @Email(message = "Formato email non valido")
     private String email;
 
+    @NotBlank(message = "Password è obbligatoria")
     @Column(nullable = false)
     private String password;
 
@@ -53,15 +66,15 @@ public class User {
 
     public User() {}
 
-    // --- Getters / Setters ---
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    //Getters / Setters
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
     public String getNome() { return nome; }
     public void setNome(String nome) { this.nome = nome; }
     public String getCognome() { return cognome; }
     public void setCognome(String cognome) { this.cognome = cognome; }
-    public int getCellulare() { return cellulare; }
-    public void setCellulare(int cellulare) { this.cellulare = cellulare; }
+    public Integer getCellulare() { return cellulare; }
+    public void setCellulare(Integer cellulare) { this.cellulare = cellulare; }
     public String getCitta() { return citta; }
     public void setCitta(String citta) { this.citta = citta; }
     public String getRegione() { return regione; }
@@ -70,8 +83,8 @@ public class User {
     public void setProvincia(String provincia) { this.provincia = provincia; }
     public String getNazione() { return nazione; }
     public void setNazione(String nazione) { this.nazione = nazione; }
-    public int getCap() { return cap; }
-    public void setCap(int cap) { this.cap = cap; }
+    public Integer getCap() { return cap; }
+    public void setCap(Integer cap) { this.cap = cap; }
     public String getIndirizzo() { return indirizzo; }
     public void setIndirizzo(String indirizzo) { this.indirizzo = indirizzo; }
     public String getCodiceFiscale() { return codiceFiscale; }

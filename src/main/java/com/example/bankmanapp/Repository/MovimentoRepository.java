@@ -9,6 +9,8 @@ import java.util.Optional;
 
 public interface MovimentoRepository extends JpaRepository<Movimenti, Integer> {
 
+    //gestisce il caricamento delle relazioni tra entità risolve il problema delle N+1 query
+    //evita di scaricare l'intero database ogni volta che si recupera un oggetto
     @EntityGraph(attributePaths = {"conto",
             "conto.idUtente",
             "carta"})

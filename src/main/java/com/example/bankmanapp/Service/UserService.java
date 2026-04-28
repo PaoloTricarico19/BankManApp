@@ -10,8 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,15 +21,15 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    // Salva un nuovo utente e restituisce il DTO
+    //Salva un nuovo utente e restituisce il DTO
     public UserDto registraUtente(User nuovoUtente) {
         User utenteSalvato = userRepository.save(nuovoUtente);
         return convertToDto(utenteSalvato);
     }
 
-    // Trova un utente per ID.
-    // Metodo robusto: valida l'input, previene SQL Injection tramite JPA
-    // e gestisce l'assenza del dato con un'eccezione esplicita.
+    //Trova un utente per ID.
+    //Metodo robusto: valida l'input, previene SQL Injection tramite JPA
+    //e gestisce l'assenza del dato con un'eccezione esplicita.
     public UserDto trovaPerId(int id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Utente non trovato con ID: " + id));
@@ -39,9 +37,9 @@ public class UserService {
         return convertToDto(user);
     }
 
-    // .stream() trasforma la lista in un flusso ordinato di dati
-    // .map(this::convertToDto) per ogni record viene applicata la trasformaione
-    // .collect(Collectors.toList()) prende tutti i record DTO r li inserisce in una lista finale
+    //.stream() trasforma la lista in un flusso ordinato di dati
+    //.map(this::convertToDto) per ogni record viene applicata la trasformaione
+    //.collect(Collectors.toList()) prende tutti i record DTO r li inserisce in una lista finale
     public List<UserDto> findAll() {
         log.debug("Richiesta lista completa utenti");
         return userRepository.findAll().stream()
@@ -52,7 +50,7 @@ public class UserService {
 
     @Transactional
     public UserDto aggiornaUtente(int id, UserDto dto) {
-        // Recuperiamo l'Entity dal database
+        //Recuperiamo l'Entity dal database
         log.debug("Aggiornamento utente {} con dati {}", id, dto);
         User esistente = userRepository.findById(id)
                 .orElseThrow(() -> {
@@ -61,7 +59,8 @@ public class UserService {
                 });
 
 
-        // Aggiorniamo l'Entity usando i dati dal Record DTO (usando i tuoi setter con validazione)
+
+        //Aggiorniamo l'Entity usando i dati dal Record DTO (usando i tuoi setter con validazione)
         //Problema dell'aggiornamento era qui
         esistente.setNome(dto.nome());
         esistente.setCognome(dto.cognome());
@@ -76,33 +75,53 @@ public class UserService {
         esistente.setEmail(dto.email());
         esistente.setPassword(dto.password());
 
-        // Salviamo le modifiche
+        //Salviamo le modifiche
         User salvato = userRepository.save(esistente);
-        log.info("Utente {} aggiornato correttamente", id);
+        //log.info("Utente {} aggiornato correttamente", id);
 
 
-        // Restituiamo il DTO aggiornato
+        //Restituiamo il DTO aggiornato
         return convertToDto(salvato);
     }
 
+    @Transactional
     public void eliminaUtente(int id) {
         log.debug("Eliminazione utente con ID {}", id);
-        if (!userRepository.existsById(id)) {
-            log.warn("Tentativo di eliminare utente inesistente con ID {}", id);
-            throw new RuntimeException("Errore: Utente con ID " + id + " non esiste.");
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> {
+                    log.warn("Tentativo di eliminare utente inesistente con ID {}", id);
+                    return new RuntimeException("Errore: Utente con ID " + id + " non esiste.");
+                });
+
+//controlla se esiste almeno un movimento associato all'utente più precisamente
+//un movimento diretto su un conto o un movimento su una carta collegata a un conto
+        boolean Movimenti = user.getConti().stream()
+                .anyMatch(conto ->
+                        !conto.getListaMovimenti().isEmpty() ||
+                                conto.getListaCarte().stream()
+                                        .anyMatch(carta -> !carta.getListaMovimenti().isEmpty())
+                );
+        if (Movimenti) {
+            log.warn("Impossibile eliminare utente {}: movimenti associati presenti",id);
+            throw new RuntimeException(
+                    "Impossibile eliminare l'utente: eliminare prima i movimenti associati"
+            );
         }
-        userRepository.deleteById(id);
+
+        userRepository.delete(user);
         log.info("Utente {} eliminato correttamente", id);
     }
 
-    // Conversione Model -> DTO (Completo con i 14 campi richiesti)
+
+    //Conversione Model -> DTO
     private UserDto convertToDto(User user) {
 
 
-        // Lista dei ContoDto
+        //Lista dei ContoDto
         List<ContoDto> contiDto = user.getConti().stream().map(conto -> {
 
-            // Movimenti del conto
+            //Movimenti del conto
             List<MovimentiDto> movimentiConto = conto.getListaMovimenti().stream()
                     .map(m -> new MovimentiDto(
                             m.getId(),
@@ -139,12 +158,11 @@ public class UserService {
                                 c.getFido(),
                                 c.getMassimaleMensile(),
                                 c.isAttiva(),
-                                null,               // non includiamo il conto per evitare ricorsione
+                                null,         // non includiamo il conto per evitare ricorsione
                                 null,               // non includiamo l'user per evitare ricorsione
                                 movimentiCarta
                         );
-                    })
-                    .collect(Collectors.toList());
+                    }).collect(Collectors.toList());
 
             return new ContoDto(
                     conto.getId(),
@@ -156,8 +174,7 @@ public class UserService {
             );
         }).collect(Collectors.toList());
 
-        //
-        //  DTO finale dell'utente
+        //DTO finale dell'utente
         return new UserDto(
                 user.getId(),
                 user.getNome(),
@@ -175,5 +192,4 @@ public class UserService {
                 contiDto
         );
     }
-
 }

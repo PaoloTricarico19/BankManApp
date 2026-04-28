@@ -52,7 +52,7 @@ public class CartaService {
         return toDto(carta);
     }
 
-    // Aggiunta @Transactional per assicurare il salvataggio dei setter
+    //Aggiunta @Transactional per assicurare il salvataggio dei setter
     //gestisce in modo dichiarativo le transazioni del database garantendo l'integrità dei dati
     //assicura che le operazioni vengano eseguite come un'unica unità di lavoro se hanno successo commit
     //altrimenti rollback
@@ -85,10 +85,26 @@ public class CartaService {
 
     public void eliminaCarta(int id) {
         log.debug("Eliminazione carta con ID {}", id);
+
         if (!cartaRepository.existsById(id)) {
             log.warn("Tentativo di eliminare carta inesistente con ID {}", id);
             throw new RuntimeException("Errore: Carta con ID " + id + " non esiste.");
         }
+
+        Carta carta = cartaRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Errore: Carta con ID " + id + " non esiste."));
+
+        //controlla se esiste almeno un movimento associato all'utente più precisamente
+        //un movimento diretto su un conto o un movimento su una carta collegata a un conto
+        boolean Movimenti= !carta.getListaMovimenti().isEmpty();
+
+        if (Movimenti) {
+            log.warn("Impossibile eliminare carta {}: movimenti associati presenti", id);
+            throw new RuntimeException(
+                    "Impossibile eliminare la carta: eliminare prima i movimenti associati"
+            );
+        }
+
         cartaRepository.deleteById(id);
         log.info("Carta {} eliminato correttamente", id);
     }

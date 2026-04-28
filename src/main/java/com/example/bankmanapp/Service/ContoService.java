@@ -61,22 +61,41 @@ public class ContoService {
                 .orElseThrow(() -> new RuntimeException("Impossibile aggiornare: ID non trovato"));
 
 
-        //  usiamo dto.saldo() e non getSaldo() perché è un Record
+        //usiamo dto.saldo() e non getSaldo() perché è un Record
         esistente.setSaldo(dto.saldo());
         esistente.setIban(dto.iban());
 
         Conto salvato = contoRepository.save(esistente);
-        log.info("Conto {} aggiornato correttamente", id);
+        //log.info("Conto {} aggiornato correttamente", id);
         return convertToDto(salvato);
     }
 
 
     public void eliminaConto(int id) {
         log.debug("Eliminazione conto con ID {}", id);
+
         if (!contoRepository.existsById(id)) {
             log.warn("Tentativo di eliminare conto inesistente con ID {}", id);
             throw new RuntimeException("Errore: Conto con ID " + id + " non esiste.");
         }
+
+        Conto conto = contoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Errore: Conto con ID " + id + " non esiste."));
+
+        //controlla se esiste almeno un movimento associato all'utente più precisamente
+        //un movimento diretto su un conto o un movimento su una carta collegata a un conto
+        boolean Movimenti =
+                !conto.getListaMovimenti().isEmpty() ||
+                        conto.getListaCarte().stream()
+                                .anyMatch(carta -> !carta.getListaMovimenti().isEmpty());
+
+        if (Movimenti) {
+            log.warn("Impossibile eliminare conto {}: movimenti associati presenti", id);
+            throw new RuntimeException(
+                    "Impossibile eliminare il conto: eliminare prima i movimenti associati"
+            );
+        }
+
         contoRepository.deleteById(id);
         log.info("Conto {} eliminato correttamente", id);
     }

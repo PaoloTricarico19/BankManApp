@@ -1,6 +1,7 @@
 package com.example.bankmanapp.Model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import org.antlr.v4.runtime.misc.NotNull;
 
 import java.time.LocalDate;
@@ -16,8 +17,9 @@ public class Carta {
     private int id;
 
     @Column(nullable = false, unique = true, length = 16)
-    private String numeroCarta;
+    private int numeroCarta;
 
+    @NotBlank(message = "Titolare è obbligatoria")
     @Column(nullable = false)
     private String titolare;
 
@@ -43,23 +45,23 @@ public class Carta {
     @Column(nullable = false)
     private boolean attiva = true;
 
-    // FK verso il Conto
+    //FK verso il Conto
     //cambiamento fatto per non far creare un conto con lo stesso utente di un altro
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_conto", nullable = false, unique = true)
     private Conto conto;
 
-    // Relazione verso i movimenti
+    //Relazione verso i movimenti
     @OneToMany(mappedBy = "carta")
     private List<Movimenti> listaMovimenti = new ArrayList<>();
 
     public Carta() {}
 
-    // --- Getters / Setters ---
+    //Getters / Setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
-    public String getNumeroCarta() { return numeroCarta; }
-    public void setNumeroCarta(String numeroCarta) { this.numeroCarta = numeroCarta; }
+    public Integer getNumeroCarta() { return numeroCarta; }
+    public void setNumeroCarta(int numeroCarta) { this.numeroCarta = numeroCarta; }
     public String getTitolare() { return titolare; }
     public void setTitolare(String titolare) { this.titolare = titolare; }
     public LocalDate getDataScadenza() { return dataScadenza; }
