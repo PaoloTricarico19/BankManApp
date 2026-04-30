@@ -38,7 +38,7 @@ public class UserService {
     }
 
     //.stream() trasforma la lista in un flusso ordinato di dati
-    //.map(this::convertToDto) per ogni record viene applicata la trasformaione
+    //.map(this::convertToDto) per ogni record viene applicata la trasformazione
     //.collect(Collectors.toList()) prende tutti i record DTO r li inserisce in una lista finale
     public List<UserDto> findAll() {
         log.debug("Richiesta lista completa utenti");
@@ -77,8 +77,6 @@ public class UserService {
 
         //Salviamo le modifiche
         User salvato = userRepository.save(esistente);
-        //log.info("Utente {} aggiornato correttamente", id);
-
 
         //Restituiamo il DTO aggiornato
         return convertToDto(salvato);

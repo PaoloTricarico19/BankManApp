@@ -21,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -70,15 +71,19 @@ class CartaServiceTest {
 
 //Se la carta esiste il metodo eliminaCarta(2) non lancia eccezioni
 //Il repository viene chiamato con deleteById(2)
-    @Test
-    void eliminaCarta_Test() {
-        when(cartaRepository.existsById(2)).thenReturn(true);
+@Test
+void eliminaCarta_Test() {
+    Carta cartaMock = mock(Carta.class);
 
-//Verifica che non venga lanciata nessuna eccezione
-        assertDoesNotThrow(() -> cartaService.eliminaCarta(2));
-    }
+    when(cartaMock.getListaMovimenti()).thenReturn(List.of());
+    when(cartaRepository.existsById(2)).thenReturn(true);
+    when(cartaRepository.findById(2)).thenReturn(Optional.of(cartaMock));
 
-//Se la carta non eiste il servizio lancia una RuntimeException
+    assertDoesNotThrow(() -> cartaService.eliminaCarta(2));
+}
+
+
+    //Se la carta non eiste il servizio lancia una RuntimeException
 //non deve chiamare deleteById
     @Test
     void eliminaCarta_cartaNonEsistente_lanciaEccezione() {

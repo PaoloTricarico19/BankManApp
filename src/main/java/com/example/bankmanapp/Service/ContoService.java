@@ -47,7 +47,6 @@ public class ContoService {
     public List<ContoDto> findAll() {
         log.debug("Richiesta lista completa conti");
         return contoRepository.findAll().stream()
-                // .filter(c -> c.getIdUtente().equals(idUtente)) // Filtra per ID Utente
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
@@ -66,7 +65,6 @@ public class ContoService {
         esistente.setIban(dto.iban());
 
         Conto salvato = contoRepository.save(esistente);
-        //log.info("Conto {} aggiornato correttamente", id);
         return convertToDto(salvato);
     }
 

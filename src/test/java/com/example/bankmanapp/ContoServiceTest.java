@@ -1,6 +1,7 @@
 package com.example.bankmanapp;
 
 import com.example.bankmanapp.Dto.ContoDto;
+import com.example.bankmanapp.Model.Conto;
 import com.example.bankmanapp.Repository.ContoRepository;
 import com.example.bankmanapp.Service.ContoService;
 
@@ -18,6 +19,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -49,9 +51,13 @@ class ContoServiceTest {
 
     @Test
     void eliminaConto() {
-        when(contoRepository.existsById(10)).thenReturn(true);
+        Conto contoMock = mock(Conto.class);
 
-//Verifica che non venga lanciata nessuna eccezione
+        when(contoMock.getListaMovimenti()).thenReturn(List.of());
+        when(contoMock.getListaCarte()).thenReturn(List.of());
+        when(contoRepository.existsById(10)).thenReturn(true);
+        when(contoRepository.findById(10)).thenReturn(Optional.of(contoMock));
+
         assertDoesNotThrow(() -> contoService.eliminaConto(10));
     }
 
