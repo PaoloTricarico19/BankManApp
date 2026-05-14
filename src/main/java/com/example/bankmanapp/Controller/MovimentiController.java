@@ -25,13 +25,7 @@ public class MovimentiController {
 
     @PostMapping(value = "/Create")
     public ResponseEntity<MovimentiDto> create(@RequestBody Movimenti nuovoMovimento) {
-
-        //Logghiamo l'azione senza esporre importo o causale nel log INFO
-        log.info("Richiesta creazione nuovo movimento");
-
         MovimentiDto creato = movimentiService.creaMovimento(nuovoMovimento);
-
-        log.info("Movimento registrato con successo - ID: {}", creato.id());
         return new ResponseEntity<>(creato, HttpStatus.CREATED);
     }
 

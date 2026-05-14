@@ -23,7 +23,9 @@ public class UserService {
 
     //Salva un nuovo utente e restituisce il DTO
     public UserDto registraUtente(User nuovoUtente) {
+        log.debug("Creazione nuovo user: {}", nuovoUtente);
         User utenteSalvato = userRepository.save(nuovoUtente);
+        log.info("User salvato con ID {}", utenteSalvato.getId());
         return convertToDto(utenteSalvato);
     }
 
@@ -33,7 +35,7 @@ public class UserService {
     public UserDto trovaPerId(int id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Utente non trovato con ID: " + id));
-
+        log.info("User {} trovato", id);
         return convertToDto(user);
     }
 
