@@ -61,7 +61,6 @@ public class UserService {
                 });
 
 
-
         //Aggiorniamo l'Entity usando i dati dal Record DTO (usando i tuoi setter con validazione)
         //Problema dell'aggiornamento era qui
         esistente.setNome(dto.nome());
